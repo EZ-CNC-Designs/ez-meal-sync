@@ -8,9 +8,10 @@ from gkeep.gkeep_run import run_meal_planning
 
 class MainProgram:
     def __init__(self):
-        self.terminate = True
+        self.terminate = True # Run until False
         load_dotenv()
-        self.username = os.getenv("GKEEP_USER")
+        self.username = os.getenv("GKEEP_USER") # Username is stored in .env
+        self.seconds = 60 # Countdown time
         
         
     def main(self):
@@ -24,24 +25,24 @@ class MainProgram:
                 verify = pyip.inputYesNo(f"\nYou entered {name_input}, is this correct? (yes/no)\n\n")
                 if verify == "yes":
                     with open(".env", "a") as file:
-                        file.write(f"\nGKEEP_USER={name_input}")
-                    self.username = name_input
+                        file.write(f"\nGKEEP_USER={name_input}") # Write the username to .env
+                    self.username = name_input # Update the username globally
                     verify = True
                 if verify == "no":
-                    continue
+                    continue # Continue until a username is made
     
         while self.terminate == True:
-            run_countdown = threading.Thread(target=self.countdown, args=[60]) # Args are seconds
-            run_countdown.start()
+            run_countdown = threading.Thread(target=self.countdown, args=[self.seconds]) # Args are seconds
+            run_countdown.start() # Start the countdown
             print(f"\nHi, {self.username}")     
             time.sleep(1)
             # Wait for user input and prompt for a choice
             user_choices = ["UI", "Run", "Exit", "Quit"]
             user_selection = pyip.inputChoice(
                 choices=user_choices,
-                prompt='''\nWelcome to EZ Meal Sync!\n
+                prompt=f'''\nWelcome to EZ Meal Sync!\n
     Enter "UI" to access the user interface, "Run" to execute the EZ Meal Sync Program, or "Exit" to terminate the program.
-    EZ Meal Sync will auto-run in 60 seconds if a selection is not made.\n\n''')
+    EZ Meal Sync will auto-run in {self.seconds} seconds if a selection is not made.\n\n''')
         
             if user_selection == "UI":
                 # Access the UI if the user selects "UI"
@@ -66,7 +67,7 @@ class MainProgram:
     
 
     def run_meal_sync(self):
-        # Run the meal planning program.
+        """Run the meal planning program."""
         reboot = 3
         try:
             print("Running EZ Meal Sync Program...")
@@ -89,8 +90,8 @@ class MainProgram:
                     continue
 
     
-    def countdown(self, time_to_run):
-        # Begin the countdown and prompt the user to make a selection or the program will run automatically
+    def countdown(self, time_to_run: int):
+        """Begin the countdown and prompt the user to make a selection or the program will run automatically."""
         time.sleep(time_to_run)
         if self.terminate == True:
             self.run_meal_sync()

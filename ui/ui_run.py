@@ -31,11 +31,14 @@ class UserInterface:
         self.MASTER_TOKEN_PATH = Path('settings/master_token.txt')
         # Retrieve the master token
         os.getenv("GKEEP_MASTERTOKEN")
+
+        self.email_address = "placeholder"
+        self.mstr_tkn = "placeholder"
         
 
-        if self.email_address and self.mstr_tkn:
-            self.keep = gkeepapi.Keep()
-            self.keep.authenticate(self.email_address, self.mstr_tkn)
+        # if self.email_address and self.mstr_tkn:
+        #     self.keep = gkeepapi.Keep()
+        #     self.keep.authenticate(self.email_address, self.mstr_tkn)
 
     def _load_json(self, file_path):
         """Helper method to load JSON data from a file."""

@@ -1,0 +1,2 @@
+pyinstaller --onefile --console --icon=images/ems_logo.ico --collect-all=gpsoauth  main.py
+# How to run the pyinstaller

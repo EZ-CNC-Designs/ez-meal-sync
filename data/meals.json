@@ -1,0 +1,358 @@
+{
+    "Blt": [
+        "Bacon",
+        "Lettuce",
+        "Tomato",
+        "Bread",
+        "Mayo",
+        "French Fries"
+    ],
+    "Tacos": [
+        "Ground Beef",
+        "Taco Shells",
+        "Lettuce",
+        "Tomato",
+        "Shredded Cheese",
+        "Yellow Onion",
+        "Taco Seasoning",
+        "Sour Cream"
+    ],
+    "Grilled Cheese": [
+        "Bread",
+        "Cheese Slices",
+        "Butter",
+        "Chicken Noodle Soup"
+    ],
+    "Chicken Parmesan": [
+        "Chicken Breasts",
+        "Spaghetti",
+        "Pasta Sauce",
+        "Eggs",
+        "Shredded Parmesan",
+        "Shredded Mozzarella",
+        "Italian Bread Crumbs"
+    ],
+    "Venison Steak": [
+        "Venison",
+        "Steak Sauce",
+        "Mushrooms",
+        "Dinner Rolls",
+        "Cream Of Mushroom Soup",
+        "Crock Pot Liner",
+        "Frozen Vegetables"
+    ],
+    "Subs": [
+        "Sub Buns",
+        "Deli Meat",
+        "Tomato",
+        "Lettuce",
+        "Mayo",
+        "Yellow Onion",
+        "Chips"
+    ],
+    "Potato Soup": [
+        "Red Potatoes",
+        "Bacon",
+        "Yellow Onion",
+        "Chicken Broth",
+        "Cream Of Chicken Soup",
+        "Shredded Cheddar"
+    ],
+    "Chicken Patty": [
+        "Hamburger Buns",
+        "Chicken Patties",
+        "Lettuce",
+        "Tomato",
+        "Mayo",
+        "French Fries"
+    ],
+    "Cheeseburger": [
+        "Ground Beef",
+        "Hamburger Buns",
+        "Cheese Slices",
+        "Lettuce",
+        "Tomato",
+        "Red Onions",
+        "Bbq Sauce",
+        "French Fries"
+    ],
+    "Bacon Chicken Salad": [
+        "Taco Shells",
+        "Chicken Breasts",
+        "Red Onions",
+        "Bacon",
+        "Lettuce",
+        "Tomato",
+        "Ranch Dressing",
+        "Shredded Mozzarella"
+    ],
+    "Spaghetti": [
+        "Spaghetti",
+        "Pasta Sauce",
+        "Garlic Toast",
+        "Parmesan Cheese"
+    ],
+    "Lasagna": [
+        "Lasagna Noodles",
+        "Spinach",
+        "Ground Beef",
+        "Pasta Sauce",
+        "Ricotta Cheese",
+        "Cottage Cheese",
+        "Shredded Parmesan",
+        "Shredded Mozzarella",
+        "Eggs",
+        "Garlic Toast"
+    ],
+    "Wild Rice Soup": [
+        "Wild Rice",
+        "Yellow Onion",
+        "Shredded Carrots",
+        "Mushrooms",
+        "Chicken Breasts",
+        "Chicken Broth",
+        "Half & Half",
+        "Cream Cheese"
+    ],
+    "Grape Chicken Salad": [
+        "Red Grapes",
+        "Chicken Breasts",
+        "Bread",
+        "Pecans",
+        "Celery",
+        "Apples",
+        "Mayo"
+    ],
+    "Nachos": [
+        "Nacho Chips",
+        "Lettuce",
+        "Tomato",
+        "Refried Beans",
+        "Cheese Sauce",
+        "Ground Beef",
+        "Shredded Cheese",
+        "Taco Seasoning"
+    ],
+    "Chimichanga": [
+        "Chicken Breasts",
+        "Spanish Rice",
+        "Burrito Shells",
+        "Salsa",
+        "Shredded Cheese"
+    ],
+    "Hotdogs/Brats": [
+        "Hotdogs/Brats",
+        "Hotdog Buns",
+        "Yellow Onions",
+        "Baked Beans"
+    ],
+    "Baked Potatoes": [
+        "Baking Potatoes",
+        "Cheese Sauce",
+        "Frozen Broccoli",
+        "Bacon",
+        "Sour Cream",
+        "Butter"
+    ],
+    "Reubens": [
+        "Corned Beef",
+        "Sour Kraut",
+        "Rye Bread",
+        "Swiss Cheese Slices",
+        "Thousand Island Dressing",
+        "French Fries"
+    ],
+    "Chicken Stir Fry": [
+        "Ramen Noodles",
+        "Chicken Breasts",
+        "Stir Fry Vegetables",
+        "Teriyaki Sauce"
+    ],
+    "Caesar Chicken": [
+        "Chicken Breasts",
+        "Caesar Dressing",
+        "Sour Cream",
+        "Shredded Parmesan",
+        "White Rice"
+    ],
+    "Lemon Pepper Chicken": [
+        "Chicken Breasts",
+        "Lemon Juice",
+        "Olive Oil",
+        "Parsley",
+        "Dinner Rolls"
+    ],
+    "Panini": [
+        "Bread",
+        "Deli Meat",
+        "Lettuce",
+        "Tomato",
+        "Yellow Onions",
+        "Bacon",
+        "French Fries",
+        "Mayo"
+    ],
+    "Pancakes": [
+        "Pancake Mix",
+        "Syrup",
+        "Vegetable Oil",
+        "Eggs",
+        "Butter",
+        "Berries",
+        "Bacon"
+    ],
+    "Stuffed Chicken": [
+        "Chicken Breasts",
+        "Spinach",
+        "Mushrooms",
+        "Sliced Mozzarella",
+        "Dinner Rolls"
+    ],
+    "Breakfast For Supper": [
+        "Bread",
+        "Butter",
+        "Eggs",
+        "Sausage Links",
+        "Hashbrowns"
+    ],
+    "Cream Cheese Chicken Chili": [
+        "Chicken Breasts",
+        "Avocado",
+        "Black Beans",
+        "Corn",
+        "Pinto Beans",
+        "Yellow Onion",
+        "Chicken Broth",
+        "Ranch Seasoning",
+        "Cream Cheese",
+        "Rotel",
+        "Shredded Cheese"
+    ],
+    "Chicken Enchilada": [
+        "Chicken Breasts",
+        "Green Chilies",
+        "Chicken Broth",
+        "Taco Shells",
+        "Shredded Monterey Jack",
+        "Sour Cream",
+        "Spanish Rice",
+        "Taco Seasoning",
+        "Cream Cheese"
+    ],
+    "Frozen Pizza": [
+        "Frozen Pizza",
+        "Lettuce",
+        "Tomato",
+        "Western Dressing",
+        "Croutons",
+        "Shredded Cheese"
+    ],
+    "Homemade Pizza": [
+        "Pizza Dough",
+        "Pizza Sauce",
+        "Shredded Mozzarella",
+        "Pepperoni",
+        "Lettuce",
+        "Tomato",
+        "Western Dressing",
+        "Croutons",
+        "Shredded Cheese"
+    ],
+    "Fettuccine Alfredo": [
+        "Alfredo",
+        "Fettuccine",
+        "Garlic Toast"
+    ],
+    "Eat Out": [
+        ""
+    ],
+    "Philly Cheese Steak": [
+        "Hoagie Rolls",
+        "Provolone Cheese",
+        "Shredded Steak",
+        "Green Pepper",
+        "Red Pepper",
+        "Mushrooms",
+        "Yellow Onions"
+    ],
+    "Wild Turkey Carnitas": [
+        "Wild Turkey",
+        "Chicken Broth",
+        "Oranges",
+        "Yellow Onions",
+        "Garlic Cloves",
+        "Bay Leaves",
+        "Taco Shells"
+    ],
+    "Crepes": [
+        "Flour",
+        "Eggs",
+        "Butter",
+        "Whipped Cream",
+        "Strawberries"
+    ],
+    "Chicken Quesadilla": [
+        "Chicken Breasts",
+        "Taco Shells",
+        "Shredded Cheese",
+        "Red Pepper",
+        "Ground Cumin",
+        "Paprika",
+        "Yellow Onion"
+    ],
+    "Bacon Egg Cheese Bagel": [
+        "Bagels",
+        "Eggs",
+        "Bacon",
+        "Mayo",
+        "Cheese Slices",
+        "Hashbrowns"
+    ],
+    "Chinese Chicken Fried Rice": [
+        "Eggs",
+        "Shredded Carrots",
+        "Yellow Onions",
+        "Jasmine Rice",
+        "Frozen Peas",
+        "Soy Sauce",
+        "Green Onions",
+        "Sesame Oil"
+    ],
+    "Sesame Chicken": [
+        "Chicken Breasts",
+        "White Rice",
+        "Sesame Seeds",
+        "Honey",
+        "Soy Sauce",
+        "Sesame Oil",
+        "Vinegar",
+        "Canola Oil",
+        "Eggs",
+        "Broccoli"
+    ],
+    "Baked Tortellini": [
+        "Ground Beef",
+        "Pasta Sauce",
+        "Cheese Tortellini",
+        "Cream Cheese",
+        "Shredded Mozzarella",
+        "Shredded Parmesan"
+    ],
+    "Pineapple Chicken And Rice": [
+        "Chicken Breasts",
+        "White Rice",
+        "Pineapple",
+        "Soy Sauce",
+        "Cilantro",
+        "Sesame Seeds",
+        "Green Onions"
+    ],
+    "Macaroni And Cheese": [
+        "Elbow Macaroni",
+        "Whole Milk",
+        "Half & Half",
+        "Shredded Cheddar",
+        "Bread Crumbs",
+        "Bread Sticks"
+    ]
+}

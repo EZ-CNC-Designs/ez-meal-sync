@@ -1,0 +1,5 @@
+
+complete the ui
+figure out recipe items
+add a regenerate option if the program quits early
+find issues with meal adding

@@ -1,5 +1,7 @@
 import gkeepapi, gpsoauth
+from gkeepapi.exception import LoginException
 from typing import Optional
+from tkinter import messagebox
 
 class GKeepGenMastToken:
     """Generate a master token to be used for Google Keep's API."""
@@ -16,10 +18,9 @@ class GKeepGenMastToken:
 
         if 'Token' in master_response:
             master_token = master_response['Token']
-            # print(f"Master Token: {master_token}")
             return master_token
         else:
-            # print("Error: No master token found")
+            
             return None
         
 
@@ -29,7 +30,7 @@ class GKeepActions(gkeepapi.Keep):
         # Connect to users Google Keep
         try:
             self.authenticate(email=email, master_token=master_token)
-        except ConnectionError:
+        except (ConnectionError, LoginException):
             return None
         
 

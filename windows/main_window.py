@@ -16,6 +16,8 @@ class MainWindow(tk.Tk):
     def __init__(self):
         super().__init__() # Inherit tkinter
 
+        dotenv.load_dotenv('data/.env')
+
         # Icon
         icon_path = os.path.join('images', 'ez_meal_sync_logo.png')
         icon = tk.PhotoImage(file=icon_path)
@@ -69,13 +71,8 @@ class MainWindow(tk.Tk):
         gen_meal_button.pack(padx=self.padding, pady=self.padding)
 
         # Open Google Keep button
-        open_gkeep_button = tk.Button(master=frame_3, text="Open Google Keep", command=self.open_gkeep)
+        open_gkeep_button = tk.Button(master=frame_3, text="Open Google Keep", command=lambda: webbrowser.open("https://keep.google.com"))
         open_gkeep_button.pack(padx=self.padding, pady=self.padding)
-
-
-    def open_gkeep(self):
-        """Open Google Keep."""
-        webbrowser.open("https://keep.google.com")
 
 
     def run_meal_sync(self):
@@ -83,8 +80,23 @@ class MainWindow(tk.Tk):
         verify_run = messagebox.askyesno(title='Run Meal Sync?', message='Are you sure that you want to run Meal Sync?\nThis action cannot be undone.')
         
         if verify_run == True:
-            # Verify that a token is created
-            # Verify email address
+            verify_token = os.getenv('GKEEP_MASTERTOKEN')
+            if not verify_token:
+                messagebox.showerror(title='No Master Token',
+                                    message='You have not yet generated a master token.')
+            verify_email = os.getenv('GKEEP_EMAIL')
+            if not verify_email:
+                messagebox.showerror(title='No Email Address',
+                                    message='You have not yet entered an email address.')
+                
+            grocery_store_file = open('data/grocery_store.txt', 'r')
+            verify_grocery_store = grocery_store_file.read()
+            if not verify_grocery_store:
+                messagebox.showerror(title='No Grocery Store Found',
+                                    message='You have not yet entered a grocery store.')
+
+
+            # Check for exceptions
             # Verify that enough meals have been created to accomidate number to be generated x3
             # Run the program
             # Have a progressbar showing status
@@ -92,4 +104,3 @@ class MainWindow(tk.Tk):
             # TODO 
             gkeep_obj = gkeep_run.GKeepActions('email', 'token') # Create a gkeep object
             
-            gkeep_obj.create_notes("Pick N' Save")

@@ -6,38 +6,41 @@ import dotenv
 from gkeep.gkeep_run import GKeepGenMastToken
 
 
-class SettingsPage(tk.Toplevel):
+class SettingsWindow(tk.Toplevel):
     def __init__(self):
-        super().__init__()
+        super().__init__() # Inheritance
 
-        self.title("Settings")
-        self.padding = 5
+        self.title("Settings") # Name of window
+        self.padding = 5 # Standard padding
 
+        # If a .env file doesn't exist, create one with variable names
         if not pathlib.Path('data/.env').exists():
             with open(file='data/.env', mode='w') as file:
                 file.write('GKEEP_EMAIL=\nGKEEP_MASTERTOKEN=')
             
             dotenv.load_dotenv(dotenv_path='data/.env')
-            self.widgets()
+            self.widgets() # Create the widgets
+
         else:
             dotenv.load_dotenv(dotenv_path='data/.env')
             self.widgets()
 
+
     def widgets(self):
         # Frame 1
-        frame_1 = tk.Frame(master=self, relief='solid', border=1, background='light coral')
+        frame_1 = tk.Frame(master=self, relief='solid', border=1, background='misty rose')
         frame_1.pack(padx=self.padding, pady=self.padding)
 
         # Frame 2
-        frame_2 = tk.Frame(master=self, relief='solid', border=1, background='light blue')
+        frame_2 = tk.Frame(master=self, relief='solid', border=1, background='light goldenrod yellow')
         frame_2.pack(padx=self.padding, pady=self.padding)
 
         # Frame 3
-        frame_3 = tk.Frame(master=self, relief='solid', border=1, background='light green')
+        frame_3 = tk.Frame(master=self, relief='solid', border=1, background='light cyan')
         frame_3.pack(padx=self.padding, pady=self.padding)
 
         # Email Prompt Text
-        email_prompt_text = tk.Label(master=frame_1, text='Email Address', background='light coral')
+        email_prompt_text = tk.Label(master=frame_1, text='Email Address', background='misty rose')
         email_prompt_text.pack(padx=self.padding, pady=self.padding)
 
         # Email Entry
@@ -48,10 +51,9 @@ class SettingsPage(tk.Toplevel):
         email_entry.pack(padx=self.padding, pady=self.padding)
         # Save the contents
         email_entry.bind('<KeyRelease>', lambda event: self.save_env_input(email_entry.get(), 'GKEEP_EMAIL'))
-        
 
         # Oauth Token Text
-        oauth_token_text = tk.Label(master=frame_1, text='OAuth Token', background='light coral')
+        oauth_token_text = tk.Label(master=frame_1, text='OAuth Token', background='misty rose')
         oauth_token_text.pack(padx=self.padding, pady=self.padding)
 
         # Oauth Token Entry        
@@ -64,7 +66,7 @@ class SettingsPage(tk.Toplevel):
         gen_master_token_button.pack(padx=self.padding, pady=self.padding)
 
         # Number of Meals Label
-        num_meals_label = tk.Label(master=frame_2, text='Number of Meals to be Generated', background='light blue')
+        num_meals_label = tk.Label(master=frame_2, text='Number of Meals to be Generated', background='light goldenrod yellow')
         num_meals_label.pack(padx=self.padding, pady=self.padding)
 
         # Number of Meals Entry
@@ -79,7 +81,7 @@ class SettingsPage(tk.Toplevel):
                                                                            file_path=meal_qty_file_path))
 
         # Grocery Store Label
-        grocery_store_label = tk.Label(master=frame_3, text='Default Grocery Store', background='light green')
+        grocery_store_label = tk.Label(master=frame_3, text='Default Grocery Store', background='light cyan')
         grocery_store_label.pack(padx=self.padding, pady=self.padding)
 
         # Grocery Store Entry
@@ -143,5 +145,4 @@ class SettingsPage(tk.Toplevel):
                     dotenv.set_key('data/.env', 'GKEEP_MASTERTOKEN', gen_token)
                     messagebox.showinfo(title='Success Generating Master Token!',
                                      message='A master token has been generated & saved.\nYou can now run the Meal Sync.')
-                
-
+        

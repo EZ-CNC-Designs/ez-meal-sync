@@ -1,6 +1,4 @@
 import os
-import tkinter as tk
-from tkinter import ttk
 from tkinter import messagebox
 import dotenv
 
@@ -26,6 +24,5 @@ class NewUser():
             "want on each list. Then start adding meals and ingredients to your menu.\n\n"
             "Tip: Make sure your menu has at least 3 times more meals than you plan to generate in a list."
             )
-
 
         messagebox.showinfo(title='Welcome New User!', message=message)

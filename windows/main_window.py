@@ -5,6 +5,7 @@ from tkinter import ttk
 import tkinter.font as tkfont
 import dotenv
 from gkeep import gkeep_run
+from windows.new_user_window import NewUser
 
 from windows.settings_window import SettingsPage
 
@@ -30,6 +31,7 @@ class MainPage(tk.Tk):
         style.theme_use('default') # was classic
 
         self.widgets() # Create the widgets
+        NewUser()
         self.mainloop() # Tkinter loop
 
     def widgets(self):
@@ -86,6 +88,7 @@ class MainPage(tk.Tk):
             # Run the program
             # Have a progressbar showing status
             
+            # TODO 
             gkeep_obj = gkeep_run.GKeepActions('email', 'token') # Create a gkeep object
             
             gkeep_obj.create_notes("Pick N' Save")

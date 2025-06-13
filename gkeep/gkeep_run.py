@@ -1,13 +1,14 @@
 import gkeepapi, gpsoauth
+from typing import Optional
 
 class GKeepGenMastToken:
     """Generate a master token to be used for Google Keep's API."""
     def __init__(self):
         pass
 
-    def mastertoken_generator(email: str, oauth_token: str, android_id='0123456789abcdef')-> str:
+    def mastertoken_generator(self, email: str, oauth_token: str, android_id='0123456789abcdef')-> Optional[str]:
         """Generates a master token to be used for Google Keep's API.
-        Takes the users email address and an oauth token and returns a master token."""
+        Takes the users email address and an oauth token and returns a master token or None."""
     
         # Android ID is generic id as it is irrelevant
         # Exchange the OAuth token for a master token

@@ -1,10 +1,9 @@
 import os, pathlib
 import tkinter as tk
 from tkinter import ttk
-import tkinter.messagebox as messbox
+import tkinter.messagebox as messagebox
 import dotenv
-
-# from gkeep import gkeep_gen_mastertoken
+from gkeep.gkeep_run import GKeepGenMastToken
 
 
 class SettingsPage(tk.Toplevel):
@@ -51,17 +50,17 @@ class SettingsPage(tk.Toplevel):
         email_entry.bind('<KeyRelease>', lambda event: self.save_env_input(email_entry.get(), 'GKEEP_EMAIL'))
         
 
-        # Master Token Text
-        master_token_text = tk.Label(master=frame_1, text='OAuth Token', background='light coral')
-        master_token_text.pack(padx=self.padding, pady=self.padding)
+        # Oauth Token Text
+        oauth_token_text = tk.Label(master=frame_1, text='OAuth Token', background='light coral')
+        oauth_token_text.pack(padx=self.padding, pady=self.padding)
 
-        # Master Token Entry        
-        master_token_entry = tk.Entry(master=frame_1, font=('Yu Gothic', 12))
-        master_token_entry.pack(padx=self.padding, pady=self.padding)
+        # Oauth Token Entry        
+        oauth_token_entry = tk.Entry(master=frame_1, font=('Yu Gothic', 12))
+        oauth_token_entry.pack(padx=self.padding, pady=self.padding)
 
         # Generate Master Token Button
         gen_master_token_button = tk.Button(master=frame_1, text='Generate Master Token',
-                                            command=lambda: self.gen_master_token())
+                                            command=lambda: self.gen_master_token(oauth_token=oauth_token_entry.get()))
         gen_master_token_button.pack(padx=self.padding, pady=self.padding)
 
         # Number of Meals Label
@@ -116,22 +115,33 @@ class SettingsPage(tk.Toplevel):
         dotenv.load_dotenv(dotenv_path='data/.env', override=True)
        
 
-    def gen_master_token(self):
+    def gen_master_token(self, oauth_token):
         """Generates a master token for Google Keep."""
         
-        # Verify all prerequsites have been met
-        email_address = os.getenv('GKEEP_EMAIL')
-        oauth_token = None
-        if not email_address:
-            messbox.showerror(title='Missing Email Address',
-                              message='You have not entered an email address.\nA master token cannot be generated.') 
-        elif not oauth_token:
-            messbox.showerror(title='Missing Oauth Token',
+        email_address = os.getenv('GKEEP_EMAIL')    
+        
+        if not email_address: # Verify an email address is given
+            messagebox.showerror(title='Missing Email Address',
+                              message='You have not entered an email address.\nA master token cannot be generated.')
+            
+        elif not oauth_token: # Verify an oauth token is given
+            messagebox.showerror(title='Missing Oauth Token',
                               message='You have not entered an oauth token.\nA master token cannot be generated.')
             
-        # TODO if a grocery name is not given
-        # TODO if a number of meals is not given
+        else: # Prompt to continue
+            verify_gen_token = messagebox.askyesno(title='Generate Master Token?',
+                                message='Are you sure you want to generate a new master token?\nA new token is only needed initially or if your Google password changes.')
             
-        else:
-            messbox.askokcancel(title='Generate Master Token?',
-                                message='Are you sure you want to generate a new master token?\nA new token is only needed initially & if your Google password changes.')
+            if verify_gen_token == True:
+                # Generate a master token 
+                gen_token = GKeepGenMastToken().mastertoken_generator(email=email_address, oauth_token=oauth_token)
+                if not gen_token:
+                    messagebox.showerror(title='Master Token Generation Failed',
+                                         message='The attempt to generate a master token failed.\nVerify that your email & oauth token is correct.')
+
+                elif gen_token:
+                    dotenv.set_key('data/.env', 'GKEEP_MASTERTOKEN', gen_token)
+                    messagebox.showinfo(title='Success Generating Master Token!',
+                                     message='A master token has been generated & saved.\nYou can now run the Meal Sync.')
+                
+

@@ -1,8 +1,9 @@
-import os
+import os, pathlib
 import tkinter as tk
 from tkinter import ttk
 import tkinter.messagebox as messbox
 import dotenv
+
 # from gkeep import gkeep_gen_mastertoken
 
 
@@ -10,10 +11,18 @@ class SettingsPage(tk.Toplevel):
     def __init__(self):
         super().__init__()
 
-        dotenv.load_dotenv()
         self.title("Settings")
         self.padding = 5
-        self.widgets()
+
+        if not pathlib.Path('data/.env').exists():
+            with open(file='data/.env', mode='w') as file:
+                file.write('GKEEP_EMAIL=\nGKEEP_MASTERTOKEN=')
+            
+            dotenv.load_dotenv(dotenv_path='data/.env')
+            self.widgets()
+        else:
+            dotenv.load_dotenv(dotenv_path='data/.env')
+            self.widgets()
 
     def widgets(self):
         # Frame 1
@@ -38,6 +47,9 @@ class SettingsPage(tk.Toplevel):
         # Create the widget
         email_entry = tk.Entry(master=frame_1, font=('Yu Gothic', 12), textvariable=email_entry_var)
         email_entry.pack(padx=self.padding, pady=self.padding)
+        # Save the contents
+        email_entry.bind('<KeyRelease>', lambda event: self.save_env_input(email_entry.get(), 'GKEEP_EMAIL'))
+        
 
         # Master Token Text
         master_token_text = tk.Label(master=frame_1, text='OAuth Token', background='light coral')
@@ -48,7 +60,8 @@ class SettingsPage(tk.Toplevel):
         master_token_entry.pack(padx=self.padding, pady=self.padding)
 
         # Generate Master Token Button
-        gen_master_token_button = tk.Button(master=frame_1, text='Generate Master Token', command=lambda: self.gen_master_token())
+        gen_master_token_button = tk.Button(master=frame_1, text='Generate Master Token',
+                                            command=lambda: self.gen_master_token())
         gen_master_token_button.pack(padx=self.padding, pady=self.padding)
 
         # Number of Meals Label
@@ -63,10 +76,8 @@ class SettingsPage(tk.Toplevel):
         num_meals_entry = tk.Entry(master=frame_2, font=('Yu Gothic', 12), textvariable=meal_qty_var)
         num_meals_entry.pack(padx=self.padding, pady=self.padding)
         # Save the entry
-        if num_meals_entry.get() is int:
-            messbox.showerror(message='test')
         num_meals_entry.bind('<KeyRelease>', lambda event: self.save_input(input=num_meals_entry.get(),
-                                                                         file_path=meal_qty_file_path))
+                                                                           file_path=meal_qty_file_path))
 
         # Grocery Store Label
         grocery_store_label = tk.Label(master=frame_3, text='Default Grocery Store', background='light green')
@@ -83,6 +94,7 @@ class SettingsPage(tk.Toplevel):
         grocery_store_entry.bind('<KeyRelease>', lambda event: self.save_input(input=grocery_store_entry.get(),
                                                                          file_path=grocery_store_file_path))
 
+
     def set_var(self, file_path):
         """Set a entry variable."""
         with open(file_path, 'r') as file:
@@ -91,22 +103,25 @@ class SettingsPage(tk.Toplevel):
         var_to_set.set(contents)
         return var_to_set
     
+
     def save_input(self, input, file_path):
         """Saves an entry input."""
         with open(file_path, 'w') as file:
             file.write(input)
 
-    def save_env_input(self, input, variable_name, file_path):
+
+    def save_env_input(self, input, variable_name):
         """Saves an entry input to a .env."""
-        with open(file_path, 'w') as file:
-            file.write(f'{variable_name}={input}\n')
+        dotenv.set_key('data/.env', variable_name, input)
+        dotenv.load_dotenv(dotenv_path='data/.env', override=True)
+       
 
     def gen_master_token(self):
-        """Generates a master token for Google Keep"""
+        """Generates a master token for Google Keep."""
         
         # Verify all prerequsites have been met
-        email_address = 'placeholder'
-        oauth_token = 'placeholder'
+        email_address = os.getenv('GKEEP_EMAIL')
+        oauth_token = None
         if not email_address:
             messbox.showerror(title='Missing Email Address',
                               message='You have not entered an email address.\nA master token cannot be generated.') 
@@ -120,6 +135,3 @@ class SettingsPage(tk.Toplevel):
         else:
             messbox.askokcancel(title='Generate Master Token?',
                                 message='Are you sure you want to generate a new master token?\nA new token is only needed initially & if your Google password changes.')
-        
-        
-        # gkeep_gen_mastertoken.mastertoken_generator(email_address=, oauth_token_id=)

@@ -6,7 +6,7 @@ import tkinter.font as tkfont
 import dotenv
 from gkeep import gkeep_run
 
-from windows.settings_page import SettingsPage
+from windows.settings_window import SettingsPage
 
 class MainPage(tk.Tk):
     """Main page."""
@@ -86,6 +86,6 @@ class MainPage(tk.Tk):
             # Run the program
             # Have a progressbar showing status
             
-            gkeep_obj = gkeep_run.GKeepActions('email', token) # Create a gkeep object
+            gkeep_obj = gkeep_run.GKeepActions('email', 'token') # Create a gkeep object
             
             gkeep_obj.create_notes("Pick N' Save")

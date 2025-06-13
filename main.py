@@ -1,4 +1,4 @@
-from windows.main_page import MainPage
+from windows.main_window import MainPage
 
 if __name__ == "__main__":
     MainPage()

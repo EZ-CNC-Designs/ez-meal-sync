@@ -4,7 +4,7 @@ from tkinter import messagebox
 from tkinter import ttk
 import tkinter.font as tkfont
 import dotenv
-from gkeep import gkeep_run
+from gkeep.gkeep_run import GKeepActions
 from windows.new_user_message import NewUser
 from windows.settings_window import SettingsWindow
 from windows.meal_library_window import MealLibraryWindow
@@ -67,40 +67,19 @@ class MainWindow(tk.Tk):
         mod_meal_list_button.pack(padx=self.padding, pady=self.padding)
 
         # Generate Meals & Grocery List button
-        gen_meal_button = tk.Button(master=frame_3, text="Generate Meals & Grocery List", command=lambda: self.run_meal_sync())
+        gen_meal_button = tk.Button(master=frame_3, text="Generate Meals & Grocery List",
+                                    command=lambda: self.run_meal_sync())
         gen_meal_button.pack(padx=self.padding, pady=self.padding)
 
         # Open Google Keep button
         open_gkeep_button = tk.Button(master=frame_3, text="Open Google Keep", command=lambda: webbrowser.open("https://keep.google.com"))
         open_gkeep_button.pack(padx=self.padding, pady=self.padding)
 
-
     def run_meal_sync(self):
-        """Runs the meal sync program."""
-        verify_run = messagebox.askyesno(title='Run Meal Sync?', message='Are you sure that you want to run Meal Sync?\nThis action cannot be undone.')
+        """"""
+        run = GKeepActions()
         
-        if verify_run == True:
-            verify_token = os.getenv('GKEEP_MASTERTOKEN')
-            if not verify_token:
-                messagebox.showerror(title='No Master Token',
-                                    message='You have not yet generated a master token.')
-            verify_email = os.getenv('GKEEP_EMAIL')
-            if not verify_email:
-                messagebox.showerror(title='No Email Address',
-                                    message='You have not yet entered an email address.')
+        verify = run.verify_data()
+        run.user_login()
+        run.create_notes()
                 
-            grocery_store_file = open('data/grocery_store.txt', 'r')
-            verify_grocery_store = grocery_store_file.read()
-            if not verify_grocery_store:
-                messagebox.showerror(title='No Grocery Store Found',
-                                    message='You have not yet entered a grocery store.')
-
-
-            # Check for exceptions
-            # Verify that enough meals have been created to accomidate number to be generated x3
-            # Run the program
-            # Have a progressbar showing status
-            
-            # TODO 
-            gkeep_obj = gkeep_run.GKeepActions('email', 'token') # Create a gkeep object
-            

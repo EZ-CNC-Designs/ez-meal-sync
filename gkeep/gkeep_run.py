@@ -33,7 +33,6 @@ class GKeepActions(gkeepapi.Keep):
         self.email = os.getenv('GKEEP_EMAIL')
         self.master_token = os.getenv('GKEEP_MASTERTOKEN')
 
-        
         GROCERY_DEPTS = set(['Produce', 'Bakery', 'Deli', 'Meat', 'Dairy', 'Frozen',
                             'Health', 'Cleaning Supplies'])
 
@@ -43,6 +42,7 @@ class GKeepActions(gkeepapi.Keep):
         self.GROCERY_STORE_LIST = str(self.grocery_store_name) + " List"
         self.CURRENT_MEALS_LIST = "Current Meals"
         self.UPCOMING_MEALS_LIST = "Upcoming Meals"
+        self.ALL_LIST_NAMES = [self.GROCERY_STORE_LIST, self.CURRENT_MEALS_LIST, self.UPCOMING_MEALS_LIST]
         
 
     def verify_data(self):
@@ -97,12 +97,17 @@ class GKeepActions(gkeepapi.Keep):
     def create_notes(self):
             """Create the needed notes if they dont' exist."""
 
-            # GROCERY_DEPTS = set('Produce', 'Bakery', 'Deli', 'Meat', 'Dairy', 'Frozen',
-                                # 'Health', 'Cleaning Supplies')
+            all_notes = self.all()
+            for note in all_notes:
+                if note.title.strip() in self.ALL_LIST_NAMES and note.archived or note.trash:
+                    print(note.title)
+        
 
-            self.new_grocery_store_list = self.createList(title=self.GROCERY_STORE_LIST,)
-            self.new_current_meal_list = self.createList(title=self.CURRENT_MEALS_LIST)
-            self.new_upcoming_meal_list = self.createList(title=self.UPCOMING_MEALS_LIST)
+
+
+            # self.new_grocery_store_list = self.createList(title=self.GROCERY_STORE_LIST,)
+            # self.new_current_meal_list = self.createList(title=self.CURRENT_MEALS_LIST)
+            # self.new_upcoming_meal_list = self.createList(title=self.UPCOMING_MEALS_LIST)
 
             self.sync() # Save changes
 class GKeepMealPlanning:

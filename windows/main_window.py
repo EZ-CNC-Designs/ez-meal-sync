@@ -79,7 +79,7 @@ class MainWindow(tk.Tk):
         """"""
         run = GKeepActions()
         
-        verify = run.verify_data()
+        run.verify_data()
         run.user_login()
         run.create_notes()
                 

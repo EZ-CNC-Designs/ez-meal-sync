@@ -1,4 +1,5 @@
-import os
+import os, tkinter as tk, time
+from tkinter import ttk
 import gkeepapi, gpsoauth, dotenv
 from gkeepapi.exception import LoginException
 from typing import Optional
@@ -43,12 +44,26 @@ class GKeepActions(gkeepapi.Keep):
         self.CURRENT_MEALS_LIST = "Current Meals"
         self.UPCOMING_MEALS_LIST = "Upcoming Meals"
         self.ALL_LIST_NAMES = [self.GROCERY_STORE_LIST, self.CURRENT_MEALS_LIST, self.UPCOMING_MEALS_LIST]
+
+
+    def current_progress(self):
+        """Show the current progress of meal generation."""
+        progress_window = tk.Tk()
+        progress_window.title('EZ Meal Sync Progress')
+        progress_window.geometry('500x500')
+
+        self.progress_message = tk.Label(master=progress_window, text='Starting EZ Meal Sync')
+        self.progress_message.pack()
+
+        progress_bar = ttk.Progressbar(master=progress_window)
+        progress_bar.pack()
         
 
     def verify_data(self):
         """Runs the meal sync program."""
         verify_run = messagebox.askyesno(title='Run Meal Sync?', message='Are you sure that you want to run Meal Sync?\nThis action cannot be undone.')
         if verify_run == True:
+            self.current_progress()
     
             verify_token = os.getenv('GKEEP_MASTERTOKEN')
             if not verify_token:
@@ -69,8 +84,6 @@ class GKeepActions(gkeepapi.Keep):
                                     message='You have not yet entered a grocery store.')
                 return False
             
-    
-
             
             # Check for exceptions
             # Verify that enough meals have been created to accomidate number to be generated x3
@@ -95,21 +108,28 @@ class GKeepActions(gkeepapi.Keep):
             return None
 
     def create_notes(self):
-            """Create the needed notes if they dont' exist."""
+        """Create the needed notes if they dont' exist."""
+        # Move existing notes from trash or archive to the main menu
+        all_notes = self.all() # Retrieve all notes on Google Keep
+        already_created_notes = [] # Keep track of what notes have been created
+        for note in all_notes:
+            if note.title.strip() in self.ALL_LIST_NAMES:              
+                note.archived = False # Unarchive
+                note.untrash() # Untrash
+                already_created_notes.append(note.title) # Add to already created
+        # Create new notes if they don't already exist
+        for note_name in self.ALL_LIST_NAMES:
+            if note_name not in already_created_notes:
+                self.new_list = self.createList(title=note_name) # Create a new note
+                time.sleep(5)
+                self.progress_message.config(text=f'Creating note {note_name}')
 
-            all_notes = self.all()
-            for note in all_notes:
-                if note.title.strip() in self.ALL_LIST_NAMES and note.archived or note.trash:
-                    print(note.title)
-        
+        self.sync() # Save changes
 
 
-
-            # self.new_grocery_store_list = self.createList(title=self.GROCERY_STORE_LIST,)
-            # self.new_current_meal_list = self.createList(title=self.CURRENT_MEALS_LIST)
-            # self.new_upcoming_meal_list = self.createList(title=self.UPCOMING_MEALS_LIST)
-
-            self.sync() # Save changes
+    def adjust_grocery_list(self):
+        """Set the grocery list with the correct categories."""
+    
 class GKeepMealPlanning:
     def __init__(self):
         pass   

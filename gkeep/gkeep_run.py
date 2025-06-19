@@ -34,7 +34,7 @@ class GKeepActions(gkeepapi.Keep):
         self.email = os.getenv('GKEEP_EMAIL')
         self.master_token = os.getenv('GKEEP_MASTERTOKEN')
 
-        GROCERY_DEPTS = set(['Produce', 'Bakery', 'Deli', 'Meat', 'Dairy', 'Frozen',
+        self.GROCERY_DEPTS = set(['Produce', 'Bakery', 'Deli', 'Meat', 'Dairy', 'Frozen',
                             'Health', 'Cleaning Supplies'])
 
         grocery_store_file = open('data/grocery_store.txt', 'r')
@@ -48,22 +48,25 @@ class GKeepActions(gkeepapi.Keep):
 
     def current_progress(self):
         """Show the current progress of meal generation."""
-        progress_window = tk.Tk()
-        progress_window.title('EZ Meal Sync Progress')
-        progress_window.geometry('500x500')
+        self.progress_window = tk.Tk()
+        self.progress_window.title('EZ Meal Sync Progress')
+        self.progress_window.geometry('500x500')
 
-        self.progress_message = tk.Label(master=progress_window, text='Starting EZ Meal Sync')
+        self.progress_message = tk.Label(master=self.progress_window, text='Starting EZ Meal Sync')
         self.progress_message.pack()
 
-        progress_bar = ttk.Progressbar(master=progress_window)
-        progress_bar.pack()
+        self.progress_bar = ttk.Progressbar(master=self.progress_window)
+        self.progress_bar.pack()
+
+        self.progress_message.update()
+        time.sleep(1)
         
 
     def verify_data(self):
         """Runs the meal sync program."""
         verify_run = messagebox.askyesno(title='Run Meal Sync?', message='Are you sure that you want to run Meal Sync?\nThis action cannot be undone.')
         if verify_run == True:
-            self.current_progress()
+            self.current_progress() # Open the progress window
     
             verify_token = os.getenv('GKEEP_MASTERTOKEN')
             if not verify_token:
@@ -121,14 +124,24 @@ class GKeepActions(gkeepapi.Keep):
         for note_name in self.ALL_LIST_NAMES:
             if note_name not in already_created_notes:
                 self.new_list = self.createList(title=note_name) # Create a new note
-                time.sleep(5)
                 self.progress_message.config(text=f'Creating note {note_name}')
+                self.progress_message.update()
+                time.sleep(.2)
 
         self.sync() # Save changes
-
+           
 
     def adjust_grocery_list(self):
         """Set the grocery list with the correct categories."""
+        grocery_lists = list(self.find(query=self.GROCERY_STORE_LIST)) # Find the grocery list
+        grocery_list = grocery_lists[0]
+        for category in self.GROCERY_DEPTS:
+            grocery_list.add(category)
+        # for line_item in grocery_list[0].items: # Access the first result
+        #     print(line_item)
+        #     if line_item.checked == True:
+        #         print(f'{line_item} ssss') 
+        self.sync()
     
 class GKeepMealPlanning:
     def __init__(self):

@@ -82,4 +82,5 @@ class MainWindow(tk.Tk):
         run.verify_data()
         run.user_login()
         run.create_notes()
+        run.adjust_grocery_list()
                 

@@ -59,7 +59,7 @@ class GKeepActions(gkeepapi.Keep):
         self.progress_bar.pack()
 
         self.progress_message.update()
-        time.sleep(1)
+        time.sleep(.2)
         
 
     def verify_data(self):
@@ -133,16 +133,18 @@ class GKeepActions(gkeepapi.Keep):
 
     def adjust_grocery_list(self):
         """Set the grocery list with the correct categories."""
-        grocery_lists = list(self.find(query=self.GROCERY_STORE_LIST)) # Find the grocery list
-        grocery_list = grocery_lists[0]
-        for category in self.GROCERY_DEPTS:
-            grocery_list.add(category)
-        # for line_item in grocery_list[0].items: # Access the first result
-        #     print(line_item)
-        #     if line_item.checked == True:
-        #         print(f'{line_item} ssss') 
-        self.sync()
+
+        gkeep_grocery_lists = list(self.find(query=self.GROCERY_STORE_LIST)) # Find the grocery list
+        gkeep_grocery_list = gkeep_grocery_lists[0] # Use the first result
+        self.old_grocery_list = [] # Make the old grocery list global
+        for item in gkeep_grocery_list.items:
+            self.old_grocery_list.append(item.text) # Pull contents and add to old grocery list
     
-class GKeepMealPlanning:
-    def __init__(self):
-        pass   
+        # Add missing categories
+        # TODO rearange categories so they are in the correct order
+        for category in self.GROCERY_DEPTS:
+            if category not in self.old_grocery_list:
+                self.old_grocery_list.append(category) # Add to the global list 
+                gkeep_grocery_list.add(category) # Add to Google Keep
+         
+        self.sync() # Save changes

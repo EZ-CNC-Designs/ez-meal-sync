@@ -197,7 +197,14 @@ class GKeepActions(gkeepapi.Keep):
             if meal_option not in upcoming_meals_list_items and meal_option not in current_meals_list_items: # Check for repeats
                 new_meal_list.add(meal_option)
 
-        # Clear out the list for new items
+        # Clear out the current meal list for new items
+        for old_item in list(current_meals_list.items):
+            old_item.delete()
+            
+
+        for item_to_move in list(upcoming_meals_list.items):
+            current_meals_list.add(item_to_move.text)
+
         for old_item in list(upcoming_meals_list.items):
             old_item.delete()
 
@@ -206,13 +213,6 @@ class GKeepActions(gkeepapi.Keep):
             upcoming_meals_list.add(meal)
 
         self.sync() # Save changes
-        playsound('sounds/success.mp3')
 
-        
-    def create_meal_list(self):
-        """Create a meal list."""
-        # Check for any other numbering conflicts
-
-        # Pull the 2 meal options lists
-        # Generate a new list of meals without repeats
-        # Push the new meal list, move the upcoming meal list, do nothing with the old list
+        new_meal_list = set() # Reset the new meal list to an empty list
+        playsound('sounds/success.mp3') # Play a mp3 after the program is complete

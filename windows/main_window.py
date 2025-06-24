@@ -83,7 +83,7 @@ class MainWindow(tk.Tk):
         verify = run.verify_data()
         if verify != False:
             run.user_login() # Login
-            # run.create_lists() # Create missing lists
-            # run.adjust_grocery_list() # Add missing categories
+            run.create_lists() # Create missing lists
+            run.adjust_grocery_list() # Add missing categories
             run.verify_num_meals() # Verify the number of meals is valid
                 

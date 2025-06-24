@@ -1,9 +1,10 @@
-import os, tkinter as tk, time, json
+import os, tkinter as tk, time, json, random
 from tkinter import ttk
+from tkinter import messagebox
 import gkeepapi, gpsoauth, dotenv
 from gkeepapi.exception import LoginException
 from typing import Optional
-from tkinter import messagebox
+from soundplay import playsound
 
 class GKeepGenMastToken:
     """Generate a master token to be used for Google Keep's API."""
@@ -164,29 +165,52 @@ class GKeepActions(gkeepapi.Keep):
         # Find the number of meals on Upcoming Meals
         upcoming_meals_list = list(self.find(query=self.UPCOMING_MEALS_LIST))
         upcoming_meals_list = upcoming_meals_list[0]
+        upcoming_meals_list_items = upcoming_meals_list.items
         num_upcoming_meals = int(len(upcoming_meals_list.items))
 
         # Find the number of meals on Current Meals
         current_meals_list = list(self.find(query=self.CURRENT_MEALS_LIST))
         current_meals_list = current_meals_list[0]
+        current_meals_list_items = current_meals_list.items
         num_current_meals = int(len(current_meals_list.items))
 
         # Find the number of meals in grocery.json
         with open('data/meals.json') as file:
             meal_opts_contents = json.load(file)
             num_meal_opts = int(len(meal_opts_contents.keys()))
+            meal_opt_titles = list(meal_opts_contents.keys())
 
         # Calculate if the desired number of meals can be generated
         # The number of meals to be generated + both lists needs to be greater than the number of options
         total_meal_qty = num_upcoming_meals + num_current_meals + self.num_meals
-        print(num_meal_opts)
         if num_upcoming_meals + num_current_meals + self.num_meals > num_meal_opts:
             messagebox.showerror(title='Too Many Meals to Generate',
                                  message='The number of meals to be generated is not possible.'
                                  f' The number of meals to be generated is set to {self.num_meals}'
                                  f' Add {total_meal_qty-self.num_meals} meal options or reduce the number of meals to be generated.')
+            
+        # New list of meals
+        new_meal_list = set() # The set removes duplicates
+
+        while len(new_meal_list) != self.num_meals: # Loop until a new meal list is full
+            meal_option = random.choice(meal_opt_titles) # Select a random meal from the list
+            if meal_option not in upcoming_meals_list_items and meal_option not in current_meals_list_items: # Check for repeats
+                new_meal_list.add(meal_option)
+
+        # Clear out the list for new items
+        for old_item in list(upcoming_meals_list.items):
+            old_item.delete()
+
+        # Add new iems to the list
+        for meal in new_meal_list:
+            upcoming_meals_list.add(meal)
+
+        self.sync() # Save changes
+        playsound('sounds/success.mp3')
+
         
-       
+    def create_meal_list(self):
+        """Create a meal list."""
         # Check for any other numbering conflicts
 
         # Pull the 2 meal options lists

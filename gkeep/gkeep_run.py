@@ -1,10 +1,10 @@
 import os, tkinter as tk, time, json, random
 from tkinter import ttk
 from tkinter import messagebox
-import gkeepapi, gpsoauth, dotenv
+import gkeepapi, gpsoauth, dotenv, soundplay
 from gkeepapi.exception import LoginException
 from typing import Optional
-from soundplay import playsound
+
 
 class GKeepGenMastToken:
     """Generate a master token to be used for Google Keep's API."""
@@ -159,7 +159,7 @@ class GKeepActions(gkeepapi.Keep):
          
         self.sync() # Save changes
 
-    def verify_num_meals(self):
+    def generate_meals(self):
         """Check if there is enough meals available for a new generation."""
 
         # Find the number of meals on Upcoming Meals
@@ -192,19 +192,24 @@ class GKeepActions(gkeepapi.Keep):
         # New list of meals
         new_meal_list = set() # The set removes duplicates
 
+        # Extract texts for duplicate checking
+        upcoming_texts = [item.text for item in upcoming_meals_list_items]
+        current_texts = [item.text for item in current_meals_list_items]
+
         while len(new_meal_list) != self.num_meals: # Loop until a new meal list is full
             meal_option = random.choice(meal_opt_titles) # Select a random meal from the list
-            if meal_option not in upcoming_meals_list_items and meal_option not in current_meals_list_items: # Check for repeats
-                new_meal_list.add(meal_option)
+            if meal_option not in upcoming_texts and meal_option not in current_texts: # Check for repeats
+                new_meal_list.add(meal_option) # Add to the set
 
         # Clear out the current meal list for new items
         for old_item in list(current_meals_list.items):
             old_item.delete()
             
-
+        # Move upcoming meals into current meals
         for item_to_move in list(upcoming_meals_list.items):
             current_meals_list.add(item_to_move.text)
 
+        # Delete the upcoming meals items to make room for new meals
         for old_item in list(upcoming_meals_list.items):
             old_item.delete()
 
@@ -215,4 +220,6 @@ class GKeepActions(gkeepapi.Keep):
         self.sync() # Save changes
 
         new_meal_list = set() # Reset the new meal list to an empty list
-        playsound('sounds/success.mp3') # Play a mp3 after the program is complete
+
+
+        soundplay.playsound('sounds/success.mp3') # Play a mp3 after the program is complete

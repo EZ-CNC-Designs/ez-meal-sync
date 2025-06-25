@@ -76,14 +76,17 @@ class MainWindow(tk.Tk):
         open_gkeep_button.pack(padx=self.padding, pady=self.padding)
 
     def run_meal_sync(self):
-        """"""
+        """Run the meal sync program."""
         run = GKeepActions()
         
-        
+        # TODO add error handling
+
         verify = run.verify_data()
         if verify != False:
             run.user_login() # Login
             run.create_lists() # Create missing lists
             run.adjust_grocery_list() # Add missing categories
             run.generate_meals() # Generate new meals
+            run.create_grocery_list() # Create the grocery list
+            run.celebrate() # Play end sound
                 

@@ -162,6 +162,8 @@ class GKeepActions(gkeepapi.Keep):
     def generate_meals(self):
         """Check if there is enough meals available for a new generation."""
 
+        # TODO Preserve any checked items when moving from upcoming to current
+
         # Find the number of meals on Upcoming Meals
         upcoming_meals_list = list(self.find(query=self.UPCOMING_MEALS_LIST))
         upcoming_meals_list = upcoming_meals_list[0]
@@ -222,4 +224,28 @@ class GKeepActions(gkeepapi.Keep):
         new_meal_list = set() # Reset the new meal list to an empty list
 
 
+    def create_grocery_list(self):
+        """Create a grocery list based on the selected meals."""
+        
+        # Pull the items from the meal list
+        upcoming_meals_list = list(self.find(query=self.UPCOMING_MEALS_LIST))
+        upcoming_meals_list = upcoming_meals_list[0]
+        upcoming_meals_list_items = upcoming_meals_list.items
+
+        # Loop through the list and access 1 item at a time
+        for item in upcoming_meals_list_items:
+            
+        # Match the meal name to the key in the meals.json file
+        # Pull the ingredients for the meal
+        # Take the ingredient & find it within grocery.json file
+        # Access the key of where the ingredient was found
+        # Find the department on the grocery list in Google Keep
+        
+        # Insert the ingredient below teh department name & indent it
+
+        self.sync() # Save changes
+
+
+    def celebrate(self):
+        # Celebrate you mother f'er, your program worked!!!
         soundplay.playsound('sounds/success.mp3') # Play a mp3 after the program is complete

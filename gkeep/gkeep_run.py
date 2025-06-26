@@ -231,14 +231,41 @@ class GKeepActions(gkeepapi.Keep):
         upcoming_meals_list = list(self.find(query=self.UPCOMING_MEALS_LIST))
         upcoming_meals_list = upcoming_meals_list[0]
         upcoming_meals_list_items = upcoming_meals_list.items
+        upcoming_meals_texts = [item.text for item in upcoming_meals_list_items]
 
-        # Loop through the list and access 1 item at a time
-        for item in upcoming_meals_list_items:
-            pass
+        # Pull the items from the grocery list
+        grocery_list = list(self.find(query=self.GROCERY_STORE_LIST))
+        grocery_list = upcoming_meals_list[0]
+        grocery_list_items = grocery_list.items
+
+        # Meal options
+        with open('data/meals.json') as file:
+            meal_data = json.load(file)
+            meal_data_keys = meal_data.keys() # A list of the keys
+
+        # Grocery departments
+        with open('data/grocery.json') as file:
+            grocery_data = json.load(file)
+            grocery_data_keys = grocery_data.keys() # A list of the keys
+            
+        all_new_groceries = set() # An empty set to store all new groceries
+
         # Match the meal name to the key in the meals.json file
-        # Pull the ingredients for the meal
-        # Take the ingredient & find it within grocery.json file
-        # Access the key of where the ingredient was found
+        for new_meal in upcoming_meals_texts:
+            if new_meal in meal_data_keys:
+                meal_data_values = meal_data[new_meal] # Create a list of the values
+                for grocery_item in meal_data_values: 
+                    all_new_groceries.add(grocery_item) # Pull each item and add it to the all grocery list
+
+        # Match the grocery item to its respective grocery department
+        for new_ingredient in all_new_groceries:
+            for key, value in grocery_data.items():
+                if new_ingredient in value:
+                    pass
+
+        
+        
+        
         # Find the department on the grocery list in Google Keep
         
         # Insert the ingredient below teh department name & indent it

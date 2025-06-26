@@ -19,7 +19,7 @@ class MainWindow(tk.Tk):
         dotenv.load_dotenv('data/.env')
 
         # Icon
-        icon_path = os.path.join('images', 'ez_meal_sync_logo.png')
+        icon_path = os.path.join('images', 'logo', 'ez_meal_sync_logo.png')
         icon = tk.PhotoImage(file=icon_path)
         self.iconphoto(True, icon)
 

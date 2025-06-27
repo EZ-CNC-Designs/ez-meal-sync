@@ -1,7 +1,7 @@
 import os, tkinter as tk, time, json, random
 from tkinter import ttk
 from tkinter import messagebox
-import gkeepapi, gpsoauth, dotenv, soundplay
+import gkeepapi, gpsoauth, soundplay
 from gkeepapi.exception import LoginException
 from typing import Optional
 
@@ -36,8 +36,8 @@ class GKeepActions(gkeepapi.Keep):
         self.email = os.getenv('GKEEP_EMAIL')
         self.master_token = os.getenv('GKEEP_MASTERTOKEN')
 
-        self.GROCERY_DEPTS = ['Produce', 'Bakery', 'Deli', 'Meat', 'Dairy', 'Frozen',
-                            'Health', 'Cleaning Supplies']
+        self.GROCERY_DEPTS = ['Produce', 'Bakery', 'Deli', 'Meat', 'Grocery', 'Dairy',
+                              'Frozen', 'Health', 'Cleaning Supplies', 'Misc']
 
         grocery_store_file = open('data/grocery_store.txt', 'r')
         self.grocery_store_name = grocery_store_file.read()
@@ -49,6 +49,7 @@ class GKeepActions(gkeepapi.Keep):
 
 
     def current_progress(self):
+        # Future TODO
         """Show the current progress of meal generation."""
         self.progress_window = tk.Tk()
         self.progress_window.title('EZ Meal Sync Progress')
@@ -120,6 +121,7 @@ class GKeepActions(gkeepapi.Keep):
                                  message='Your login failed. Regenerate a new master token & check your email address.')
             return None
 
+
     def create_lists(self):
         """Create the needed notes if they dont' exist."""
         # Move existing notes from trash or archive to the main menu
@@ -156,6 +158,14 @@ class GKeepActions(gkeepapi.Keep):
             if category not in self.old_grocery_list:
                 self.old_grocery_list.append(category) # Add to the global list 
                 gkeep_grocery_list.add(category) # Add to Google Keep
+
+        # If items are checked, delete from the list
+        for item in gkeep_grocery_list.items:
+            if item.checked == True and item.text not in self.GROCERY_DEPTS:
+                item.delete()
+            # Uncheck category titles
+            if item.checked == True and item.text in self.GROCERY_DEPTS:
+                item.checked = False
          
         self.sync() # Save changes
 
@@ -245,16 +255,10 @@ class GKeepActions(gkeepapi.Keep):
 
         # Grocery departments
         with open('data/grocery.json') as file:
-            grocery_data = json.load(file)
-            grocery_data_keys = grocery_data.keys() # A list of the keys
-            
+            grocery_data = json.load(file)            
         
         temp_grocery_list = set() # Temporaily store all new groceries
-
-        # Add the existing data (departments & groceries) to the grocery list
-        # for dept_item in gkeep_grocery_list_text:
-        #     all_new_groceries.append(dept_item)
-      
+    
         # Match the meal name to the key in the meals.json file to pull the ingredients needed
         for new_meal in upcoming_meals_texts:
             if new_meal in meal_data_keys:
@@ -285,13 +289,58 @@ class GKeepActions(gkeepapi.Keep):
                 if ingredient_dept == dept:
                     final_grocery_list.append(ingredient)
 
+        # Preserve manually created items (thank you ChatGPT)
+        manual_items = {}
+        for item in gkeep_grocery_list_items:
+            if item.text not in final_grocery_list:
+                parent = item.parent_item.text if item.parent_item else None
+                manual_items[item.text] = parent
+
         # Delete the items in the gkeep list & re-add the new items
         for old_item in gkeep_grocery_list_items:
             old_item.delete()
-        for new_item in final_grocery_list:
-            gkeep_grocery_list.add(new_item)
-          
-        print(final_grocery_list)
+
+        sort_value = 0
+
+        # Index the grocery iems & add to Google Keep
+        # The sort is necessary or items will be added randomly
+        for new_text in reversed(final_grocery_list):
+            list_item = gkeep_grocery_list.add(new_text)
+            list_item.sort = sort_value
+            sort_value += 1
+
+        # Add manual items back into the list
+        for manual_text, manual_parent in manual_items.items():
+            manual_item = gkeep_grocery_list.add(manual_text)
+            manual_item.sort = sort_value
+            sort_value += 1
+
+        # Re-fetch items after adding
+        gkeep_items = list(gkeep_grocery_list.items)
+
+        # Thank you ChatGPT, I couldn't figure out indenting
+        # Build mapping of department -> list item
+        dept_items = {
+            item.text: item
+            for item in gkeep_items
+            if item.text in self.GROCERY_DEPTS
+        }
+
+        # Indent all non-department items under the right department
+        for item in gkeep_items:
+            if item.text not in self.GROCERY_DEPTS:
+                # Check if item is one of the manual items and has a previous parent
+                if item.text in manual_items and manual_items[item.text] in dept_items:
+                    dept_items[manual_items[item.text]].indent(item)
+                else:
+                    dept = grocery_dict.get(item.text)
+                    if dept and dept in dept_items:
+                        dept_items[dept].indent(item)
+                    else:
+                        # Unindent item from any parent
+                        if item.parent_item is not None:
+                            item.parent_item.dedent(item)
+
         self.sync() # Save changes
 
 

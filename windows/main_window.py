@@ -23,7 +23,7 @@ class MainWindow(tk.Tk):
         icon = tk.PhotoImage(file=icon_path)
         self.iconphoto(True, icon)
 
-        self.title("EZ Meal Sync") # Page title
+        self.title("EZ Meal Sync - v1.0") # Page title
         
         self.padding = 5 # Default padding
 

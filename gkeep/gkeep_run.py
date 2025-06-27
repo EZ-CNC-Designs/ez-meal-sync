@@ -36,8 +36,8 @@ class GKeepActions(gkeepapi.Keep):
         self.email = os.getenv('GKEEP_EMAIL')
         self.master_token = os.getenv('GKEEP_MASTERTOKEN')
 
-        self.GROCERY_DEPTS = set(['Produce', 'Bakery', 'Deli', 'Meat', 'Dairy', 'Frozen',
-                            'Health', 'Cleaning Supplies'])
+        self.GROCERY_DEPTS = ['Produce', 'Bakery', 'Deli', 'Meat', 'Dairy', 'Frozen',
+                            'Health', 'Cleaning Supplies']
 
         grocery_store_file = open('data/grocery_store.txt', 'r')
         self.grocery_store_name = grocery_store_file.read()
@@ -234,9 +234,9 @@ class GKeepActions(gkeepapi.Keep):
         upcoming_meals_texts = [item.text for item in upcoming_meals_list_items]
 
         # Pull the items from the grocery list
-        grocery_list = list(self.find(query=self.GROCERY_STORE_LIST))
-        grocery_list = upcoming_meals_list[0]
-        grocery_list_items = grocery_list.items
+        gkeep_grocery_list = list(self.find(query=self.GROCERY_STORE_LIST))[0]
+        gkeep_grocery_list_items = gkeep_grocery_list.items
+        gkeep_grocery_list_text = [item.text.title() for item in gkeep_grocery_list_items]
 
         # Meal options
         with open('data/meals.json') as file:
@@ -248,31 +248,57 @@ class GKeepActions(gkeepapi.Keep):
             grocery_data = json.load(file)
             grocery_data_keys = grocery_data.keys() # A list of the keys
             
-        all_new_groceries = set() # An empty set to store all new groceries
+        
+        temp_grocery_list = set() # Temporaily store all new groceries
 
-        # Match the meal name to the key in the meals.json file
+        # Add the existing data (departments & groceries) to the grocery list
+        # for dept_item in gkeep_grocery_list_text:
+        #     all_new_groceries.append(dept_item)
+      
+        # Match the meal name to the key in the meals.json file to pull the ingredients needed
         for new_meal in upcoming_meals_texts:
             if new_meal in meal_data_keys:
                 meal_data_values = meal_data[new_meal] # Create a list of the values
                 for grocery_item in meal_data_values: 
-                    all_new_groceries.add(grocery_item) # Pull each item and add it to the all grocery list
+                    temp_grocery_list.add(grocery_item) # Pull each item and add it to the all grocery list
+                    
+        grocery_dict = {} # Empty dict, key to be ingredient with the value to be the department
 
         # Match the grocery item to its respective grocery department
-        for new_ingredient in all_new_groceries:
-            for key, value in grocery_data.items():
-                if new_ingredient in value:
-                    pass
+        for new_ingredient in temp_grocery_list: # Loop through all the new ingredients
+            for key, value in grocery_data.items(): # Access the grocery dept name & items
+                if new_ingredient in value: # If the new ingredient is found in the grocery items
+                    grocery_dict[new_ingredient] = key # Retrieve the key of the grocery item and add it to the dict
 
+        # Same thing but do it for the existing grocery list
+        for new_ingredient in gkeep_grocery_list_text: # Loop through all the old ingredients
+            for key, value in grocery_data.items(): # Access the grocery dept name & items
+                if new_ingredient in value: # If the new ingredient is found in the grocery items
+                    grocery_dict[new_ingredient] = key # Retrieve the key of the grocery item and add it to the dict
         
+        final_grocery_list = [] # An empty list to store all new groceries
         
-        
-        # Find the department on the grocery list in Google Keep
-        
-        # Insert the ingredient below teh department name & indent it
+        # Insert the ingredient into the list in the correct location
+        for dept in self.GROCERY_DEPTS:
+            final_grocery_list.append(dept)
+            for ingredient, ingredient_dept in grocery_dict.items():
+                if ingredient_dept == dept:
+                    final_grocery_list.append(ingredient)
 
+        # Delete the items in the gkeep list & re-add the new items
+        for old_item in gkeep_grocery_list_items:
+            old_item.delete()
+        for new_item in final_grocery_list:
+            gkeep_grocery_list.add(new_item)
+          
+        print(final_grocery_list)
         self.sync() # Save changes
 
 
     def celebrate(self):
         # Celebrate you mother f'er, your program worked!!!
+        
         soundplay.playsound('sounds/success.mp3') # Play a mp3 after the program is complete
+        messagebox.showinfo(title='EZ Meal Sync Success!',
+                            message='EZ Meal Sync was a success & your grocery list is ready to go!'
+                            ' Kick your feet up & relax for now!')
